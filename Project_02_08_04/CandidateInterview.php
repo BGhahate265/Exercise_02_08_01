@@ -5,10 +5,20 @@
     <meta charset="UTF-8">
     <meta src="viewport" content="initial-scale=1.0">
     <script src="modernizr.custom.65897.js"></script>
+<!--Embedded CSS-->
     <style>
     @import url('https://fonts.googleapis.com/css?family=Raleway');
         #formscss, #tablecss, h1, h2, h3 {
             font-family: 'Raleway', sans-serif;
+        }
+        #formscss {
+            text-align: center;
+        }
+        #h1format {
+            text-align: center;
+        }
+        #h2format {
+            padding-left: 0.8em;
         }
         input[type=submit] {
             cursor: pointer;
@@ -18,13 +28,24 @@
             text-align: center;
             background-color: azure;
         }
+        input[type=text] {
+            background-color: azure;
+        }
         html {
+            background-color: #80ced6;
+        }
+        html body {
             background:#fefbd8;
+            margin-left: auto;
+            margin-right: auto;
+            min-width: 25%;
+            max-width: 75%;
         }
     </style>
+<!--    End of Embedded CSS-->
 </head>
 <body>
-<h1>Interview Application</h1>
+<h1 id="h1format">Interview Application</h1>
 <?php
     //Function to connect to database multiple times
     function connectToDB($hostName, $userName, $password) {
@@ -145,7 +166,7 @@
 //                            echo "<p>Error code" . mysqli_errno($DBConnect) . ":" . mysqli_error($DBConnect) . "</p>";
                         }
                         else {
-                            echo "<h3>Thank you for applying!</h3>";
+                            echo "<h3 id='h1format'>Thank you for applying!</h3>";
                             $Name = "";
                             $position = "";
                             $communication = "";
@@ -162,7 +183,7 @@
     }
 ?>
 <form action="CandidateInterview.php" method="post" id="formscss">
-    <p><strong>Name: </strong><br>
+    <p><strong>Candidate Name: </strong><br>
     <input type="text" name="canName" required size="35" value="<?php echo $Name;?>"
     </p>
     <p><strong>Position: </strong><br>
@@ -192,7 +213,7 @@ if ($DBConnect) {
         if (createTable($DBConnect, $tablename)) {
             //debug
 //            echo "<p>Connection successful!</p>\n";
-            echo "<h2>Candidate Log</h2>";
+            echo "<h2 id='h2format'>Candidate Log</h2>";
             $sql = "SELECT * FROM $tablename";
             $result = mysqli_query($DBConnect, $sql);
             if (mysqli_num_rows($result) == 0) {
@@ -203,7 +224,7 @@ if ($DBConnect) {
                 echo "<table width='100%' border='1' padding: '1.5em' id='tablecss'>";
                 echo "<tr>";
                 echo "<th>Candidate</th>";
-                echo "<th>Name</th>";
+                echo "<th>Candidate Name</th>";
                 echo "<th>Position</th>";
                 echo "<th>Date of Interview</th>";
                 echo "<th>Commincation Abilities</th>";
