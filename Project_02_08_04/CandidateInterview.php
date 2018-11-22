@@ -92,7 +92,7 @@
             $sql = "CREATE TABLE $tablename" . 
                 "(candidateID SMALLINT NOT NULL" .
                 " AUTO_INCREMENT PRIMARY KEY," . 
-                " name VARCHAR(80), position VARCHAR(100)," .
+                " name VARCHAR(80), interviewerName VARCHAR(80), position VARCHAR(100)," .
                 " interviewDate DATE, communication VARCHAR(200)," .
                 " appearance VARCHAR(200), computerskills VARCHAR(200)," .
                 " bussKnowledge VARCHAR(200), comments VARCHAR(250))";
@@ -122,6 +122,7 @@
     $DBName = "candidatelist";
     $tablename = "candidates";
     $Name = "";
+    $interviewerName = "";
     $position = "";
     $communication = "";
     $appearance = "";
@@ -131,6 +132,8 @@
     $formErrorCount = 0;
     //Validation Tests
     if (isset($_POST['submit'])) {
+        $interviewerName = stripslashes($_POST['interviewerName']);
+        $interviewerName = trim($_POST['interviewerName']);
         $Name = stripslashes($_POST['canName']);
         $Name = trim($Name);
         $position = stripslashes($_POST['canPosition']);
@@ -144,7 +147,7 @@
         $business = stripslashes($_POST['canBusiness']);
         $business = trim($business);
         $comments = stripslashes($_POST['canComments']);
-        if (empty($Name)) {
+        if (empty($Name && $interviewerName)) {
             echo "<p>Please enter your name in admitting the application.</p>\n";
             ++$formErrorCount;
         }
@@ -158,7 +161,7 @@
                         //debug
 //                        echo "<p>Connection successful!</p>\n";
                         $interviewerDate = date("Y-m-d");
-                        $sql = "INSERT INTO $tablename VALUES(NULL, '$Name', '$position', '$interviewerDate', '$communication', '$appearance', '$computer', '$business', '$comments')";
+                        $sql = "INSERT INTO $tablename VALUES(NULL, '$interviewerName', '$Name', '$position', '$interviewerDate', '$communication', '$appearance', '$computer', '$business', '$comments')";
                         $result = mysqli_query($DBConnect, $sql);
                         if ($result === false) {
                             //Debugging purposes
@@ -168,6 +171,7 @@
                         else {
                             echo "<h3 id='h1format'>Thank you for applying!</h3>";
                             $Name = "";
+                            $interviewerName = "";
                             $position = "";
                             $communication = "";
                             $appearance = "";
@@ -183,6 +187,9 @@
     }
 ?>
 <form action="CandidateInterview.php" method="post" id="formscss">
+    <p><strong>Interviewer Name: </strong><br>
+    <input type="text" name="interviewerName" required size="35" value="<?php echo $interviewerName;?>"
+    </p>
     <p><strong>Candidate Name: </strong><br>
     <input type="text" name="canName" required size="35" value="<?php echo $Name;?>"
     </p>
@@ -224,6 +231,7 @@ if ($DBConnect) {
                 echo "<table width='100%' border='1' padding: '1.5em' id='tablecss'>";
                 echo "<tr>";
                 echo "<th>Candidate</th>";
+                echo "<th>Interviewer Name</th>";
                 echo "<th>Candidate Name</th>";
                 echo "<th>Position</th>";
                 echo "<th>Date of Interview</th>";
@@ -244,6 +252,7 @@ if ($DBConnect) {
                     echo "<td>$row[6]</td>";
                     echo "<td>$row[7]</td>";
                     echo "<td>$row[8]</td>";
+                    echo "<td>$row[9]</td>";
                     echo "</tr>";
                 }
                 echo "</table>";
